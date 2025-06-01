@@ -1,0 +1,6 @@
+#!/usr/bin/with-contenv bash
+# vim:ft=bash
+
+exec 2>&1 \
+  s6-notifyoncheck -d -n 300 -w 1000 -c "nc -z localhost 2222" \
+  /usr/sbin/sshd -D -e

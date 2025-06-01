@@ -1,0 +1,4 @@
+#!/usr/bin/execlineb -P
+
+with-contenv
+exec syncthing --no-browser --home=/var/syncthing --gui-address=0.0.0.0:8384

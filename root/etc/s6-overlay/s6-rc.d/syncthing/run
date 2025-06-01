@@ -1,4 +1,8 @@
-#!/usr/bin/execlineb -P
+#!/usr/bin/with-contenv bash
+# vim:ft=bash
 
-with-contenv
-exec syncthing --no-browser --home=/var/syncthing --gui-address=0.0.0.0:8384
+exec \
+  s6-notifyoncheck -d -n 300 -w 1000 -c "nc -z localhost 8384" \
+  s6-setuidgid abc syncthing \
+  --home=/config/syncthing --no-browser --no-restart --no-default-folder \
+  --gui-address="0.0.0.0:8384"

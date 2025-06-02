@@ -16,6 +16,13 @@ RUN \
 COPY --chown=abc:abc root/ /
 RUN chown -R root:root /custom-cont-init.d/
 
+# prepare calibre-web-automated directories for override
+RUN \
+  echo "**** setup: calibre-web-automated ****" && \
+  install -d -o abc -g abc /app/calibre-web-automated
+
+COPY --chown=abc:abc dirs.json /app/calibre-web-automated/dirs.json
+
 # Syncthing
 RUN \
   echo "**** setup: syncthing ****" && \
@@ -36,10 +43,6 @@ COPY nginx/nginx.conf /etc/nginx/nginx.conf
 RUN \
   echo "**** setup: nginx ****" && \
   chmod +x /etc/nginx/nginx.conf
-
-RUN \
-  echo "**** setup: symlink library ****" && \
-  chmod +x /etc/s6-overlay/s6-rc.d/symlink-library/run
 
 RUN apt-get clean && \
   rm -rf /var/lib/apt/lists/*

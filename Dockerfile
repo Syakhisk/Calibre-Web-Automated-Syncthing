@@ -33,7 +33,13 @@ RUN \
 # Nginx Setup
 # Ensure Nginx runs with proper permissions
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
-RUN chmod +x /etc/nginx/nginx.conf
+RUN \
+  echo "**** setup: nginx ****" && \
+  chmod +x /etc/nginx/nginx.conf
+
+RUN \
+  echo "**** setup: symlink library ****" && \
+  chmod +x /etc/s6-overlay/s6-rc.d/symlink-library/run
 
 RUN apt-get clean && \
   rm -rf /var/lib/apt/lists/*

@@ -1,0 +1,13 @@
+#!/usr/bin/with-contenv bash
+
+false
+
+# echo "[symlink-library] Creating symlink for Calibre library..."
+# # mv /calibre-library /calibre-library.bak 2>/dev/null || true
+# mv /calibre-library /calibre-library.bak 2>/dev/null
+# 
+# echo "[symlink-library] Creating /config/library symlink to /calibre-library"
+# mkdir -p /config/library
+# 
+# echo "[symlink-library] Linking /config/library to /calibre-library"
+# ln -sf /config/library /calibre-library

@@ -1,0 +1,3 @@
+- [x] nginx/caddy for reverse proxy syncthing and calibre-web
+- Script to sync column with /library folder
+- Mail service (for send to kindle)

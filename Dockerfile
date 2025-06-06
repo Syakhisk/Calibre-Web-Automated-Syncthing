@@ -19,9 +19,17 @@ RUN chown -R root:root /custom-cont-init.d/
 # prepare calibre-web-automated directories for override
 RUN \
   echo "**** setup: calibre-web-automated ****" && \
-  install -d -o abc -g abc /app/calibre-web-automated
+  install -d -o abc -g abc /app/calibre-web-automated && \
+  install -d -o abc -g abc /app/calibre-web-automated/scripts
 
-COPY --chown=abc:abc dirs.json /app/calibre-web-automated/dirs.json
+# Overwrite files
+RUN \
+  echo "**** setup: overwrite-files ****" && \
+  mkdir -p /custom/ && \
+  chmod +x /etc/s6-overlay/s6-rc.d/overwrite-files/run
+
+COPY --chown=abc:abc dirs.json /custom/dirs.json
+COPY --chown=abc:abc scripts/auto_library.py /custom/auto_library.py
 
 # Syncthing
 RUN \

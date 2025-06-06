@@ -1,0 +1,34 @@
+#!/usr/bin/with-contenv bash
+# vim:ft=bash
+
+original_dirs_json="/app/calibre-web-automated/dirs.json"
+override_dirs_json="/custom/dirs.json"
+
+# Extract calibre_library_dir paths
+original_calibre_library_dir=$(jq -r '.calibre_library_dir' "$original_dirs_json")
+override_calibre_library_dir=$(jq -r '.calibre_library_dir' "$override_dirs_json")
+
+# Overwrite dirs.json
+if [ -f "$override_dirs_json" ]; then
+  echo "[orverwrite-files] Overwriting $original_dirs_json with $override_dirs_json"
+  cp -f "$override_dirs_json" "$original_dirs_json"
+else
+  echo "[orverwrite-files] $override_dirs_json not found, skipping overwrite"
+fi
+
+# Overwrite auto_library.py
+echo "[orverwrite-files] Overwriting auto_library.py"
+cp -f /custom/auto_library.py /app/calibre-web-automated/scripts/auto_library.py
+
+# # Handle metadata.db
+# if [ -f "$override_calibre_library_dir/metadata.db" ]; then
+#   echo "[orverwrite-files] metadata.db exists in $override_calibre_library_dir, skipping copy"
+# elif [ -f "$original_calibre_library_dir/metadata.db" ]; then
+#   echo "[orverwrite-files] metadata.db not found in $override_calibre_library_dir, copying from $original_calibre_library_dir"
+#   mv "$original_calibre_library_dir/metadata.db" "$override_calibre_library_dir/metadata.db"
+# else
+#   echo "[orverwrite-files] metadata.db not found in either directory, CALIBRE MAY NOT WORK PROPERLY"
+#   exit 1
+# fi
+
+echo "[orverwrite-files] Overwrite completed successfully"

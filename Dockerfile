@@ -16,6 +16,21 @@ RUN \
 COPY --chown=abc:abc root/ /
 RUN chown -R root:root /custom-cont-init.d/
 
+# prepare calibre-web-automated directories for override
+RUN \
+  echo "**** setup: calibre-web-automated ****" && \
+  install -d -o abc -g abc /app/calibre-web-automated && \
+  install -d -o abc -g abc /app/calibre-web-automated/scripts
+
+# Overwrite files
+RUN \
+  echo "**** setup: overwrite-files ****" && \
+  mkdir -p /custom/ && \
+  chmod +x /etc/s6-overlay/s6-rc.d/overwrite-files/run
+
+COPY --chown=abc:abc dirs.json /custom/dirs.json
+COPY --chown=abc:abc scripts/auto_library.py /custom/auto_library.py
+
 # Syncthing
 RUN \
   echo "**** setup: syncthing ****" && \
@@ -33,7 +48,9 @@ RUN \
 # Nginx Setup
 # Ensure Nginx runs with proper permissions
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
-RUN chmod +x /etc/nginx/nginx.conf
+RUN \
+  echo "**** setup: nginx ****" && \
+  chmod +x /etc/nginx/nginx.conf
 
 RUN apt-get clean && \
   rm -rf /var/lib/apt/lists/*

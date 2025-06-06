@@ -17,8 +17,8 @@ services:
       - ./config:/config
       # This is an ingest dir, NOT a library one. Anything added here will be automatically added to your library according to the settings you have configured in CWA Settings page. All files placed here are REMOVED AFTER PROCESSING
       - ./book-ingest:/cwa-book-ingest
-      # If you don't have an existing library, CWA will automatically create one at the bind provided here
-      - ./library:/calibre-library
+      # # If you don't have an existing library, CWA will automatically create one at the bind provided here
+      - ./library:/config/calibre-library
     ports:
       - 8083:8083
       - 9000:8384

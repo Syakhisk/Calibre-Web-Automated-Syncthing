@@ -10,6 +10,15 @@ empty_metadata_db="$(jq -r '.calibre_library_dir' "$original_dirs_json")/metadat
 # Get the Calibre library directory from the override file.
 # Make sure this directory exists.
 calibre_library_dir=$(jq -r '.calibre_library_dir' "$override_dirs_json")
+
+# If CALIBRE_LIBRARY_DIR is set, use it instead.
+if [[ -n "${CALIBRE_LIBRARY_DIR}" ]]; then
+  echo "[update-library] Using CALIBRE_LIBRARY_DIR: ${CALIBRE_LIBRARY_DIR}"
+  calibre_library_dir="${CALIBRE_LIBRARY_DIR:-$calibre_library_dir}"
+  jq --arg dir "$calibre_library_dir" '.calibre_library_dir = $dir' "$original_dirs_json" >"$override_dirs_json"
+fi
+
+echo "[update-library] Ensure calibre library directory $calibre_library_dir exists"
 install -d -o abc -g abc "$calibre_library_dir"
 
 # If an override file exists, use it.
@@ -35,5 +44,5 @@ fi
 
 # Update the library path in the database.
 echo "[update-library] Updating library path with sqlite."
-sqlite3 "$app_db" "UPDATE settings SET config_calibre_dir=\"${calibre_library_dir}\";"
+sqlite3 "$app_db" "UPDATE settings SET config_calibre_dir='${calibre_library_dir}';" || echo "[update-library] sqlite error"
 echo "[update-library] Library updated and overwrite completed."

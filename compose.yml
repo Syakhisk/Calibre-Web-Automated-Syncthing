@@ -13,6 +13,7 @@ services:
       - TZ=Asia/Jakarta
       - FILEBROWSER_USER=m42nk
       - FILEBROWSER_PASSWORD=m42nk
+      - CALIBRE_LIBRARY_DIR="/config/calibre-library"
     # volumes:
     #   # CW users migrating should stop their existing CW instance, make a copy of the config folder, and bind that here to carry over all of their user settings ect.
     #   - ./config:/config

@@ -29,6 +29,11 @@ RUN \
   install -d -o abc -g abc /var/lib/syncthing && \
   chmod +x /etc/s6-overlay/s6-rc.d/syncthing/run
 
+# Filebrowser Setup
+RUN \
+  echo "**** setup: filebrowser ****" && \
+  curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash && \
+  chmod +x /etc/s6-overlay/s6-rc.d/filebrowser/run
 
 # Nginx Setup
 # Ensure Nginx runs with proper permissions
@@ -48,3 +53,6 @@ EXPOSE 8080
 
 # Calibre Web UI
 EXPOSE 8083
+
+# Nginx Ports
+EXPOSE 80

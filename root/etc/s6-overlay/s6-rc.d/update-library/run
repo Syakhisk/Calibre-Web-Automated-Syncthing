@@ -1,28 +1,39 @@
 #!/usr/bin/with-contenv bash
 # vim:ft=bash
 
+# Set paths
 original_dirs_json="/app/calibre-web-automated/dirs.json"
 override_dirs_json="/custom/dirs.json"
-
-original_auto_library="/app/calibre-web-automated/scripts/auto_library.py"
-override_auto_library="/custom/auto_library.py"
-
 app_db="/config/app.db"
+empty_metadata_db="$(jq -r '.calibre_library_dir' "$original_dirs_json")/metadata.db"
 
-# Make sure dir_path exists
+# Get the Calibre library directory from the override file.
+# Make sure this directory exists.
 calibre_library_dir=$(jq -r '.calibre_library_dir' "$override_dirs_json")
-install -d -o abc -g abc $calibre_library_dir
+install -d -o abc -g abc "$calibre_library_dir"
 
-# Overwrite dirs.json to change the default library path
-if [ -f "$override_dirs_json" ]; then
+# If an override file exists, use it.
+if [[ -f "$override_dirs_json" ]]; then
   echo "[update-library] Overwriting $original_dirs_json with $override_dirs_json"
   cp -f "$override_dirs_json" "$original_dirs_json"
 else
-  echo "[update-library] $override_dirs_json not found, skipping overwrite"
+  echo "[update-library] $override_dirs_json not found. Skipping overwrite."
 fi
 
-echo "[update-library] Updating library path with sqlite"
-sqlite3 $app_db "UPDATE settings SET config_calibre_dir=\"${calibre_library_dir}\";"
-echo "[update-library] Library updated"
+# Check for metadata.db in the new library. Copy it if it's missing.
+if [[ ! -f "${calibre_library_dir}/metadata.db" ]]; then
+  echo "[update-library] No metadata.db found in new library. Copying from original."
+  if [[ -f "$empty_metadata_db" ]]; then
+    cp "$empty_metadata_db" "${calibre_library_dir}/metadata.db"
+    echo "[update-library] metadata.db copied."
+  else
+    echo "[update-library] Original metadata.db not found. Cannot copy."
+  fi
+else
+  echo "[update-library] metadata.db already exists in new library. Skipping copy."
+fi
 
-echo "[update-library] Overwrite completed successfully"
+# Update the library path in the database.
+echo "[update-library] Updating library path with sqlite."
+sqlite3 "$app_db" "UPDATE settings SET config_calibre_dir=\"${calibre_library_dir}\";"
+echo "[update-library] Library updated and overwrite completed."

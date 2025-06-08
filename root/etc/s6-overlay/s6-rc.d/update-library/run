@@ -1,0 +1,28 @@
+#!/usr/bin/with-contenv bash
+# vim:ft=bash
+
+original_dirs_json="/app/calibre-web-automated/dirs.json"
+override_dirs_json="/custom/dirs.json"
+
+original_auto_library="/app/calibre-web-automated/scripts/auto_library.py"
+override_auto_library="/custom/auto_library.py"
+
+app_db="/config/app.db"
+
+# Make sure dir_path exists
+calibre_library_dir=$(jq -r '.calibre_library_dir' "$override_dirs_json")
+install -d -o abc -g abc $calibre_library_dir
+
+# Overwrite dirs.json to change the default library path
+if [ -f "$override_dirs_json" ]; then
+  echo "[update-library] Overwriting $original_dirs_json with $override_dirs_json"
+  cp -f "$override_dirs_json" "$original_dirs_json"
+else
+  echo "[update-library] $override_dirs_json not found, skipping overwrite"
+fi
+
+echo "[update-library] Updating library path with sqlite"
+sqlite3 $app_db "UPDATE settings SET config_calibre_dir=\"${calibre_library_dir}\";"
+echo "[update-library] Library updated"
+
+echo "[update-library] Overwrite completed successfully"

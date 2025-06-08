@@ -16,20 +16,13 @@ RUN \
 COPY --chown=abc:abc root/ /
 RUN chown -R root:root /custom-cont-init.d/
 
-# prepare calibre-web-automated directories for override
+# Update library
 RUN \
-  echo "**** setup: calibre-web-automated ****" && \
-  install -d -o abc -g abc /app/calibre-web-automated && \
-  install -d -o abc -g abc /app/calibre-web-automated/scripts
-
-# Overwrite files
-RUN \
-  echo "**** setup: overwrite-files ****" && \
+  echo "**** setup: update-library ****" && \
   mkdir -p /custom/ && \
-  chmod +x /etc/s6-overlay/s6-rc.d/overwrite-files/run
+  chmod +x /etc/s6-overlay/s6-rc.d/update-library/run
 
 COPY --chown=abc:abc dirs.json /custom/dirs.json
-COPY --chown=abc:abc scripts/auto_library.py /custom/auto_library.py
 
 # Syncthing
 RUN \
@@ -37,13 +30,6 @@ RUN \
   install -d -o abc -g abc /var/lib/syncthing && \
   chmod +x /etc/s6-overlay/s6-rc.d/syncthing/run
 
-# SSH Setup
-COPY ssh/sshd_config /etc/ssh/sshd_config
-RUN \
-  echo "**** setup: ssh ****" && \
-  usermod -aG sudo abc && \
-  chsh -s /bin/bash abc && \
-  ssh-keygen -A
 
 # Nginx Setup
 # Ensure Nginx runs with proper permissions
@@ -58,8 +44,8 @@ RUN apt-get clean && \
 # Syncthing Ports
 EXPOSE 8384 22000/tcp 22000/udp 21027/UDP
 
-# SSH Ports
-EXPOSE 22
+# Filebrowser Ports
+EXPOSE 8080
 
 # Calibre Web UI
 EXPOSE 8083

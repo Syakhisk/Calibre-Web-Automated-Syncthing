@@ -1,3 +1,8 @@
+- [ ] calibre web change direcotry with script
+- [ ] use nginx as entry point, use nginx for subdomain
+- [ ] install filebrowser, expose it through nginx
+- [x] remove ssh
+- [x] change dirs.json to scynthing
 - [x] nginx/caddy for reverse proxy syncthing and calibre-web
 - Script to sync column with /library folder
 - Mail service (for send to kindle)

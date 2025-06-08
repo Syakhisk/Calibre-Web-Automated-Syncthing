@@ -14,7 +14,6 @@ RUN \
   syncthing
 
 COPY --chown=abc:abc root/ /
-RUN chown -R root:root /custom-cont-init.d/
 
 # Update library
 RUN \

@@ -1,0 +1,10 @@
+#!/usr/bin/with-contenv bash
+# vim:ft=bash
+
+
+exec \
+  s6-notifyoncheck -d -n 300 -w 1000 -c "nc -z localhost 8080" \
+  s6-setuidgid abc filebrowser \
+  --address=0.0.0.0 --port=8080 \
+  --root=/ --database=/config/filebrowser.db \
+  --username="${FILEBROWSER_USER}" --password="$(filebrowser hash ${FILEBROWSER_PASSWORD})"

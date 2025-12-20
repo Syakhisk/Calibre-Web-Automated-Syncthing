@@ -27,7 +27,7 @@ services:
       - 8083:8083 # calibre-web-ui
       - 8385:8384 # syncthing
   koinsight:
-    image: ghcr.io/georgesg/koinsight:v0.1.2
+    image: ghcr.io/georgesg/koinsight:v0.1.4
     ports:
       - "3001:3000"
     volumes:

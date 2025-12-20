@@ -1,5 +1,4 @@
-/config
-/book-ingest
-/library
-./koinsight-data
+config
+book-ingest
+library
 koinsight-data

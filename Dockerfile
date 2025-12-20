@@ -1,4 +1,4 @@
-FROM crocodilestick/calibre-web-automated:V3.0.4
+FROM crocodilestick/calibre-web-automated:V3.1.4
 
 ARG SSH_PASSWORD
 
